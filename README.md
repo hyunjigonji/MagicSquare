@@ -48,17 +48,18 @@ MagicSquare/
 │   ├── 02.REPORT.md          # STEP 2 — 문제 정의
 │   ├── 03.REPORT.md          # STEP 3 — .cursorrules 거버넌스
 │   ├── 04.REPORT.md          # STEP 4 — Skill·Command
-│   └── 05.REPORT.md          # STEP 5 — RED 설계·계획
+│   ├── 05.REPORT.md          # STEP 5 — RED 설계·계획
+│   └── 06.REPORT.md          # STEP 6 — RED 스켈레톤 D-LOC-01
 ├── .cursor/
 │   ├── commands/             # /tdd-red, /review-ecb
 │   └── skills/magic-square-tdd/
 ├── src/magicsquare/          # (예정) entity / control / boundary
-├── tests/                    # (예정) test_d_* · test_u_* · entity/
+├── tests/                    # conftest · entity/test_d_loc_01.py (D-LOC-01 RED)
 └── prompt/
-    ├── 01.Export Transcript.md … 05.Export Transcript.md
+    ├── 01.Export Transcript.md … 06.Export Transcript.md
 ```
 
-> **현재 단계:** STEP 5(RED 설계·계획) 완료. **STEP 6+** — `src/`·`tests/`에 RED → GREEN → REFACTOR ([docs/RED-TODO.md](docs/RED-TODO.md)).
+> **현재 단계:** STEP 6(D-LOC-01 RED 스켈레톤·pytest FAIL) 완료. **STEP 7+** — GREEN `find_blank_coords` ([docs/RED-TODO.md](docs/RED-TODO.md)).
 
 ---
 
@@ -88,12 +89,13 @@ TDD 세션 시작 시 Agent는 `Phase` / `Layer` / `Track` / `Target`을 선언�
 | [report/03.REPORT.md](report/03.REPORT.md) | 8계층 · `.cursorrules` v0.1 |
 | [report/04.REPORT.md](report/04.REPORT.md) | Skill `magic-square-tdd`, slash Command |
 | [report/05.REPORT.md](report/05.REPORT.md) | RED 설계·D-LOC/U-IN 계획, G1 SSOT |
+| [report/06.REPORT.md](report/06.REPORT.md) | RED 스켈레톤 D-LOC-01, pytest FAIL |
 | [docs/PRD.md](docs/PRD.md) | Goals, `validate`, T0~T3, Acceptance |
 | [docs/RED-TODO.md](docs/RED-TODO.md) | RED 설계표·픽스처 G0/G1·진행 Todo |
 | [.cursorrules](.cursorrules) | 코딩 세션 Rule SSOT |
 | [.cursor/skills/magic-square-tdd/SKILL.md](.cursor/skills/magic-square-tdd/SKILL.md) | RED/GREEN/REFACTOR 절차 |
 | [prompt/01.Export Transcript.md](prompt/01.Export%20Transcript.md) | 인터뷰 Q&A |
-| [prompt/02.Export Transcript.md](prompt/02.Export%20Transcript.md) ~ [05](prompt/05.Export%20Transcript.md) | STEP별 Cursor Export |
+| [prompt/02.Export Transcript.md](prompt/02.Export%20Transcript.md) ~ [06](prompt/06.Export%20Transcript.md) | STEP별 Cursor Export |
 
 ---
 
@@ -158,7 +160,8 @@ STEP 2  문제 정의           → report/02.REPORT.md
 STEP 3  PRD + .cursorrules  → docs/PRD.md, report/03.REPORT.md
 STEP 4  Skill·Command       → .cursor/skills/, report/04.REPORT.md
 STEP 5  RED 설계·계획       → docs/RED-TODO.md, report/05.REPORT.md
-STEP 6+ RED → GREEN → REFACTOR
+STEP 6  RED 스켈레톤       → tests/entity/test_d_loc_01.py, report/06.REPORT.md
+STEP 7+ GREEN → REFACTOR
 ```
 
 ---
@@ -189,7 +192,7 @@ Dual-Track **RED** — `tests/`에 실패 테스트를 먼저 작성한다.
 
 ### Logic Track — ECB·솔버
 
-- [ ] **D-LOC-01** — `find_blank_coords(G1)` → `[(2,2),(3,3)]` (`tests/test_d_solver.py` 또는 `tests/entity/test_d_loc_01.py`)
+- [x] **D-LOC-01** — RED 스켈레톤 pytest FAIL (`tests/entity/test_d_loc_01.py`) → GREEN: `[(2,2),(3,3)]`
 - [ ] **D-MIS-01** — `find_not_exist_nums(G1)` → `[7, 10]` (`tests/test_d_solver.py`)
 - [ ] **D-VAL-01** — `is_magic_square(G0)` → `True` (`tests/test_d_validate.py`)
 - [ ] **D-SOL-01** — `solution(G1)` Step A (`tests/test_d_solver.py`)
