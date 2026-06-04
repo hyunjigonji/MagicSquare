@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # G1: 부분 격자 — 빈칸 `0` 2칸, 1-index (2,2)·(3,3), row-major 스캔 순서
 _GRID_G1: list[list[int]] = [
