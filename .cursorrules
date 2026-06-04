@@ -1,0 +1,74 @@
+# MagicSquare — Cursor Rules (초안 v0.1)
+
+## 프로젝트
+4×4 부분 마방진 학습 프로젝트. ECB + Dual-Track TDD. 근거: `docs/PRD.md`, `report/02.REPORT.md`.
+
+## 도메인 (불변)
+- 격자: 4×4, 값 1~16, 빈칸 `0` **정확히 2칸** (부분 격자)
+- Magic constant: **34** — 10선(행4+열4+주·부대각선) 합
+- 솔버 성공 출력: `int[6]` = `[r1, c1, n1, r2, c2, n2]`
+  - `(r,c)`는 **1-index** 좌표, `n`은 해당 빈칸에 채울 값
+- 검증 Rule: R1~R5 (`validate`) — PRD 참조
+
+## 오류 코드 (Boundary 전용)
+| 코드 | 담당 |
+|------|------|
+| E001~E005 | **Boundary만** — 입력·형식·범위 등 |
+| E006~E007 | Boundary 또는 Control (명세에 따름) |
+
+**Entity 금지:** E001~E005를 Entity에서 생성·처리·변환하지 않는다.
+Entity는 순수 도메인(격자·규칙·솔버)만 다룬다.
+
+## 아키텍처 — ECB
+```
+Boundary → Control → Entity
+```
+- **의존 방향:** boundary → control → entity (단방향)
+- **Entity:** `entity` 패키지 외부 import **금지** (`from entity import *` 포함)
+- Boundary: I/O, CLI/UI, E001~E005 발생
+- Control: 유스케이스 조율, Boundary↔Entity 변환
+- Entity: 규칙·솔버·값 객체, 프레임워크·I/O 무지
+
+## Dual-Track
+| Track | 대상 | Mock |
+|-------|------|------|
+| **Logic** | entity, control | **Domain Mock 금지** — 실제 객체·순수 함수만 |
+| **UI** | boundary | Mock **허용** (입력 스텁, 출력 캡처 등) |
+
+Logic 테스트에서 Entity/Control을 mock/patch하지 않는다.
+
+## 디렉터리·테스트 규약
+```
+src/magicsquare/
+  entity/    control/    boundary/
+tests/
+  test_d_*.py   # Logic — ID 접두사 D-*
+  test_u_*.py   # UI    — ID 접두사 U-*
+```
+
+## TDD (엄격)
+1. **RED** → **GREEN** → **REFACTOR** 순서 준수
+2. 작업 시작 시 선언: `Phase: RED|GREEN|REFACTOR`, `Layer: entity|control|boundary`, `Track: Logic|UI`
+3. **금지:** assert 완화, `@pytest.mark.skip`, `xfail`, 테스트 삭제로 GREEN 달성
+4. RED: 실패하는 테스트 먼저. GREEN: 최소 구현. REFACTOR: 테스트 유지하며 구조 개선
+
+## MagicConstant — SSOT
+- `34`, `16`(최대값), `4`(크기) 리터럴 **산재 금지**
+- `entity` 계층(또는 공유 `constants`)에 **단일 정의** 후 import
+- 예: `MAGIC_CONSTANT = 34`, `GRID_SIZE = 4`, `MAX_VALUE = 16`
+
+## 구현 시 금지 (v0.1 범위 외)
+- Solver·UI·ECB 전체를 한 번에 구현 (단계별 PRD milestone 준수)
+- `SquareValidator` 등 Rule+Test 없는 빈 껍데기
+- Entity에서 Boundary 오류(E001~E005) 처리
+
+## AI 행동
+- **한국어**로 응답
+- TDD 작업마다 Phase / Layer / Track 선언
+- 변경 범위 최소화 — 요청·테스트·PRD에 없는 리팩터 금지
+- **git commit / push:** 사용자가 명시적으로 요청할 때만
+- 문서(`*.md`)는 사용자 요청 없이 생성·수정하지 않음
+
+## 참고 문서
+- PRD: `docs/PRD.md` — FR, T0~T3, Acceptance
+- 문제 정의: `report/02.REPORT.md` — Mom Test, R1~R5
